@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="qLc-rM-tfK">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="3ae-EU-YQS">
+            <objects>
+                <viewController id="qLc-rM-tfK" customClass="ViewController" customModule="Paint" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="zDr-hf-SLg">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="HUR-33-Txj">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <subviews>
+                                    <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VnA-ON-W42">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="567"/>
+                                    </arscnView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="juX-HH-8d1">
+                                        <rect key="frame" x="0.0" y="567" width="375" height="100"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1Mu-h2-8zu">
+                                                <rect key="frame" x="0.0" y="0.0" width="187.5" height="100"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                                <state key="normal" title="Reset">
+                                                    <color key="titleColor" red="0.80784314869999996" green="0.027450980619999999" blue="0.33333334329999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="reset:" destination="qLc-rM-tfK" eventType="touchUpInside" id="Dhi-OV-pEq"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lwl-xJ-lba">
+                                                <rect key="frame" x="187.5" y="0.0" width="187.5" height="100"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                                <state key="normal" title="Undo"/>
+                                                <connections>
+                                                    <action selector="undo:" destination="qLc-rM-tfK" eventType="touchUpInside" id="vAk-k4-NNE"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="100" id="4lY-OM-q96"/>
+                                        </constraints>
+                                    </stackView>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="HUR-33-Txj" firstAttribute="top" secondItem="zDr-hf-SLg" secondAttribute="top" id="Qr8-5f-nYV"/>
+                            <constraint firstItem="HUR-33-Txj" firstAttribute="trailing" secondItem="z5G-I0-By2" secondAttribute="trailing" id="SzN-6W-kjP"/>
+                            <constraint firstItem="HUR-33-Txj" firstAttribute="bottom" secondItem="z5G-I0-By2" secondAttribute="bottom" id="Tmk-Ay-HY4"/>
+                            <constraint firstItem="HUR-33-Txj" firstAttribute="leading" secondItem="z5G-I0-By2" secondAttribute="leading" id="jHZ-gg-3Ot"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="z5G-I0-By2"/>
+                    </view>
+                    <connections>
+                        <outlet property="sceneView" destination="VnA-ON-W42" id="tFn-ne-ij6"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="sjf-J2-ZCf" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="805.60000000000002" y="56.221889055472268"/>
+        </scene>
+    </scenes>
+</document>
