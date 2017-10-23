@@ -14,22 +14,36 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 
     @IBOutlet var sceneView: ARSCNView!
     
+    
+    /// True means that it's a dot; False means it's a connecting line
+    var pastNodes = [(node: SCNNode, dot: Bool)]()
+    
+    var breakConnection = false
+    
     @IBAction func reset(_ sender: Any) {
-        for node in sceneView.scene.rootNode.childNodes {
-            if node.camera == nil && node.light == nil{
-                node.removeFromParentNode()
-            }
+        while let (pastNode, _) = pastNodes.popLast() {
+            pastNode.removeFromParentNode()
         }
     }
     
     @IBAction func undo(_ sender: Any) {
-        
-        if let lastNode = sceneView.scene.rootNode.childNodes.last {
-            if lastNode.camera == nil && lastNode.light == nil{
-                lastNode.removeFromParentNode()
-            }
+        guard let (lastNode, isDot) = pastNodes.popLast() else {
+            return
+        }
+        guard isDot else {
+            fatalError("Unexpected line node")
         }
         
+        lastNode.removeFromParentNode()
+        
+        guard let (secondToLastNode, isDot2) = pastNodes.popLast(), isDot2 == false else {
+            return
+        }
+        
+        secondToLastNode.removeFromParentNode()
+    }
+    @IBAction func `breakConnection`(_ sender: Any) {
+        breakConnection = true
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -71,20 +85,19 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         let offSet: Float = 1
         
-        guard let sphereScene = SCNScene(named: "art.scnassets/sphere.scn") else {
-            fatalError("Could not get sphere scene")
+        let dotPosition = getPositionInFrontOfCamera(distance: offSet)
+        
+        if let (lastNode, isDot) = pastNodes.last, breakConnection == false {
+            guard isDot else {
+                fatalError("Unexpected line node")
+            }
+            let lastPosition = lastNode.position
+            addConnectionNode(lastPosition, dotPosition)
         }
         
-        let wrapperNode = SCNNode()
-        for child in sphereScene.rootNode.childNodes {
-            child.geometry?.firstMaterial?.lightingModel = .physicallyBased
-            wrapperNode.addChildNode(child)
-        }
+        addDotNode(position: dotPosition)
         
-        let spherePosition = getPositionInFrontOfCamera(distance: offSet)
-        
-        wrapperNode.position = spherePosition
-        sceneView.scene.rootNode.addChildNode(wrapperNode)
+        breakConnection = false
     }
     
     // MARK: - ARSCNViewDelegate
@@ -114,6 +127,65 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     // MARK: Private Methods
+    private func addConnectionNode(_ a: SCNVector3, _ b: SCNVector3) {
+        let averagePosition = getAveragePosition(a, b)
+        let distance = getDistance(a, b)
+        let lineGeom = SCNCylinder(radius: 0.03, height: CGFloat(distance))
+        lineGeom.firstMaterial?.diffuse.contents = UIColor.red
+        
+        let lineNode = SCNNode(geometry: lineGeom)
+        
+        lineNode.position = averagePosition
+        
+        var xRot = atan((b.z - a.z)/(b.y - a.y))
+        var yRot: Float = 0.0
+        var zRot = acos((b.x - a.x)/(b.y - a.y))
+        
+        xRot = xRot.isNaN ? Float.pi / 2 : xRot
+        yRot = yRot.isNaN ? Float.pi / 2 : yRot
+        zRot = zRot.isNaN ? Float.pi / 2 : zRot
+        
+        let rotation = SCNVector3(xRot, yRot, zRot)
+        
+        print("a: \(a)")
+        print("b: \(b)")
+        print("rotation: \(xRot.radiansToDegrees), \(yRot.radiansToDegrees), \(zRot.radiansToDegrees)")
+        
+        lineNode.eulerAngles = rotation
+        
+        sceneView.scene.rootNode.addChildNode(lineNode)
+        pastNodes.append((node: lineNode, dot: false))
+    }
+    
+    private func getDistance(_ a: SCNVector3, _ b: SCNVector3) -> Float {
+        let dX = a.x - b.x
+        let dY = a.y - b.y
+        let dZ = a.z - b.z
+        
+        let sumSqr = pow(dX, 2) + pow(dY, 2) + pow(dZ, 2)
+        
+        return sqrt(sumSqr)
+    }
+    
+    private func getAveragePosition(_ a: SCNVector3, _ b: SCNVector3) -> SCNVector3 {
+        return SCNVector3((a.x + b.x)/2, (a.y + b.y)/2, (a.z + b.z)/2)
+    }
+    
+    private func addDotNode(position: SCNVector3) {
+        guard let sphereScene = SCNScene(named: "art.scnassets/dot.scn") else {
+            fatalError("Could not get dot scene")
+        }
+        let dotNode = SCNNode()
+        for child in sphereScene.rootNode.childNodes {
+            child.geometry?.firstMaterial?.lightingModel = .physicallyBased
+            dotNode.addChildNode(child)
+        }
+        
+        dotNode.position = position
+        sceneView.scene.rootNode.addChildNode(dotNode)
+        
+        pastNodes.append((node: dotNode, dot: true))
+    }
     
     private func getPositionInFrontOfCamera(distance: Float) -> SCNVector3 {
         var (translation, rotation) = getCameraTranslationAndRotation()

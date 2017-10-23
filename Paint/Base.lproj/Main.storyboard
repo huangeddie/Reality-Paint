@@ -27,7 +27,7 @@
                                         <rect key="frame" x="0.0" y="567" width="375" height="100"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1Mu-h2-8zu">
-                                                <rect key="frame" x="0.0" y="0.0" width="187.5" height="100"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="125" height="100"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                                 <state key="normal" title="Reset">
                                                     <color key="titleColor" red="0.80784314869999996" green="0.027450980619999999" blue="0.33333334329999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -37,11 +37,21 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lwl-xJ-lba">
-                                                <rect key="frame" x="187.5" y="0.0" width="187.5" height="100"/>
+                                                <rect key="frame" x="125" y="0.0" width="125" height="100"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="30"/>
-                                                <state key="normal" title="Undo"/>
+                                                <state key="normal" title="Undo">
+                                                    <color key="titleColor" red="0.96078431610000004" green="0.70588237050000002" blue="0.20000000300000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                </state>
                                                 <connections>
                                                     <action selector="undo:" destination="qLc-rM-tfK" eventType="touchUpInside" id="vAk-k4-NNE"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iVg-SC-wFz">
+                                                <rect key="frame" x="250" y="0.0" width="125" height="100"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                                <state key="normal" title="Break"/>
+                                                <connections>
+                                                    <action selector="breakConnection:" destination="qLc-rM-tfK" eventType="touchUpInside" id="AfE-rr-qSB"/>
                                                 </connections>
                                             </button>
                                         </subviews>
