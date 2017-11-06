@@ -13,53 +13,66 @@ import ARKit
 class ViewController: UIViewController, ARSCNViewDelegate {
 
     @IBOutlet var sceneView: ARSCNView!
-    @IBOutlet weak var distanceLabel: UILabel!
-    
     
     /// True means that it's a dot; False means it's a connecting line
-    var pastNodes = [(node: SCNNode, dot: Bool)]()
+    var drawNodes = [SCNNode]()
+    
+    var debug = false
     
     var breakConnection = false
     
     @IBAction func reset(_ sender: Any) {
-        while let (pastNode, _) = pastNodes.popLast() {
-            pastNode.removeFromParentNode()
+        while let node = drawNodes.popLast() {
+            node.removeFromParentNode()
+        }
+    }
+    @IBAction func toggleDebug(_ sender: Any) {
+        debug = !debug
+        
+        // Show statistics such as fps and timing information
+        sceneView.showsStatistics = true
+        
+        if debug {
+            sceneView.debugOptions = SCNDebugOptions(rawValue: ARSCNDebugOptions.showWorldOrigin.rawValue | ARSCNDebugOptions.showFeaturePoints.rawValue)
+        } else {
+            sceneView.debugOptions = SCNDebugOptions(rawValue: 0)
         }
         
-        updateDistanceLabel()
+        let debugAlert = UIAlertController(title: nil, message: "Debugging is \(debug ? "on" : "off")", preferredStyle: UIAlertControllerStyle.alert)
+        
+        present(debugAlert, animated: true) {
+            sleep(1)
+            debugAlert.dismiss(animated: true)
+        }
+        
+        reset(self)
+    }
+    @IBAction func draw(_ sender: Any) {
+        guard let sphereScene = SCNScene(named: "art.scnassets/dot.scn") else {
+            fatalError("Could not get dot scene")
+        }
+        let dotNode = SCNNode()
+        for child in sphereScene.rootNode.childNodes {
+            child.geometry?.firstMaterial?.lightingModel = .physicallyBased
+            dotNode.addChildNode(child)
+        }
+        
+        let position = getPositionInFrontOfCamera(distance: 0.5)
+        
+        dotNode.position = position
+        sceneView.scene.rootNode.addChildNode(dotNode)
+        
+        drawNodes.append(dotNode)
     }
     
-    @IBAction func undo(_ sender: Any) {
-        guard let (lastNode, isDot) = pastNodes.popLast() else {
-            return
-        }
-        guard isDot else {
-            fatalError("Unexpected line node")
-        }
-        
-        lastNode.removeFromParentNode()
-        
-        while let (lineNode, isDot2) = pastNodes.last, isDot2 == false {
-            lineNode.removeFromParentNode()
-            pastNodes.removeLast()
-        }
-        
-        updateDistanceLabel()
-    }
-    @IBAction func `breakConnection`(_ sender: Any) {
-        breakConnection = true
-    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Set the view's delegate
         sceneView.delegate = self
         
-        // Show statistics such as fps and timing information
-        sceneView.showsStatistics = true
         
-        // Debug
-        sceneView.debugOptions = SCNDebugOptions(rawValue: ARSCNDebugOptions.showWorldOrigin.rawValue | ARSCNDebugOptions.showFeaturePoints.rawValue)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -96,34 +109,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         super.didReceiveMemoryWarning()
         // Release any cached data, images, etc that aren't in use.
     }
-
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        let height = sceneView.bounds.height
-        let width = sceneView.bounds.width
-        let centerPoint = CGPoint(x: width / 2, y: height / 2)
-        let results = sceneView.hitTest(centerPoint, types: .featurePoint)
-        
-        guard let firstHit = results.last else {
-            return
-        }
-        
-        let dotPosition = SCNVector3(MDLTransform(matrix: firstHit.worldTransform).translation)
-        
-        if let (lastNode, isDot) = pastNodes.last, breakConnection == false {
-            guard isDot else {
-                fatalError("Unexpected line node")
-            }
-            let lastPosition = lastNode.position
-            addConnectionNodes(lastPosition, dotPosition)
-        }
-        
-        addDotNode(position: dotPosition)
-        
-        breakConnection = false
-        
-        updateDistanceLabel()
-    }
     
     // MARK: - ARSCNViewDelegate
     
@@ -152,41 +137,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     // MARK: Private Methods
-    private func updateDistanceLabel() {
-        if let (a,b) = getLastTwoDotsIfConnected() {
-            let distance = getDistance(a, b)
-            
-            distanceLabel.text = "\((distance * 100).rounded() / 100.0) m"
-        } else {
-            distanceLabel.text = "-"
-        }
-    }
-    
-    private func getLastTwoDotsIfConnected() -> (SCNVector3,SCNVector3)? {
-        
-        guard let (lastNode, isDot) = pastNodes.last, pastNodes.count > 2 else {
-            return nil
-        }
-        
-        guard isDot else {
-            fatalError("Unexpected connection node")
-        }
-        
-        let (_, isDot2) = pastNodes[pastNodes.count - 2]
-        
-        if isDot2 {
-            // This was a broken connection
-            return nil
-        }
-        
-        for i in (0..<(pastNodes.count - 1)).reversed() {
-            let (pastNode, isDot3) = pastNodes[i]
-            if isDot3 {
-                return (pastNode.position, lastNode.position)
-            }
-        }
-        fatalError("Could not get expected last two dots that were connected")
-    }
+
     
     private func getCameraNode() -> SCNNode {
         for node in sceneView.scene.rootNode.childNodes {
@@ -196,22 +147,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         }
         
         fatalError("Could not get camera node")
-    }
-    
-    private func addConnectionNodes(_ a: SCNVector3, _ b: SCNVector3) {
-        let deltaVector = b - a
-        let distance = getDistance(a, b)
-        
-        let radius: Float = 0.01
-        
-        let numberOfConnectionNodes = Int(round(distance / radius))
-        
-        let stepVector = deltaVector / Float(numberOfConnectionNodes + 1)
-        for i in 1...numberOfConnectionNodes {
-            let position = a + (Float(i) * stepVector)
-            
-            addDotNode(position: position, connector: false)
-        }
     }
     
     private func getDistance(_ a: SCNVector3, _ b: SCNVector3) -> Float {
@@ -228,50 +163,15 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         return SCNVector3((a.x + b.x)/2, (a.y + b.y)/2, (a.z + b.z)/2)
     }
     
-    private func addDotNode(position: SCNVector3, connector: Bool = true) {
-        guard let sphereScene = SCNScene(named: "art.scnassets/dot.scn") else {
-            fatalError("Could not get dot scene")
-        }
-        let dotNode = SCNNode()
-        for child in sphereScene.rootNode.childNodes {
-            child.geometry?.firstMaterial?.lightingModel = .physicallyBased
-            dotNode.addChildNode(child)
-        }
-        
-        dotNode.position = position
-        sceneView.scene.rootNode.addChildNode(dotNode)
-        
-        pastNodes.append((node: dotNode, dot: connector))
-    }
-    
     private func getPositionInFrontOfCamera(distance: Float) -> SCNVector3 {
         
-        let height = sceneView.bounds.height
-        let width = sceneView.bounds.width
-        let centerPoint = CGPoint(x: width / 2, y: height / 2)
-        let results = sceneView.hitTest(centerPoint, types: .featurePoint)
+        let cameraNode = getCameraNode()
         
-        var (cameraTranslation, cameraRotation) = getCameraTranslationAndRotation()
+        let positionRelativeToCamera = SCNVector3(0.0, 0.0, -distance)
         
-        guard let farthestHitTest = results.last else {
-            // Do it with trig
-            let zOffSet = distance * cos(cameraRotation.x) * cos(cameraRotation.y)
-            let yOffSet = distance * sin(cameraRotation.x) * sin(cameraRotation.z)
-            let xOffSet = distance * sin(cameraRotation.y) * sin(cameraRotation.z)
-            
-            cameraTranslation.z -= zOffSet
-            cameraTranslation.y -= yOffSet
-            cameraTranslation.x += xOffSet
-            
-            return SCNVector3(cameraTranslation)
-        }
+        let worldPosition = cameraNode.convertPosition(positionRelativeToCamera, to: sceneView.scene.rootNode)
         
-        let hitDistance = farthestHitTest.distance
-        let hitTranslation = MDLTransform(matrix: farthestHitTest.worldTransform).translation
-        
-        let unitDeltaVector = (SCNVector3(hitTranslation) - SCNVector3(cameraTranslation)) / Float(hitDistance)
-        
-        return SCNVector3(cameraTranslation) + unitDeltaVector * distance
+        return worldPosition
     }
     
     private func getCameraTranslationAndRotation() -> (translation: vector_float3, rotation: vector_float3) {
