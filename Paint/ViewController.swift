@@ -28,6 +28,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     var distance: Float = 1.0
     var crossHairNode: SCNNode!
     
+    var timer = Timer()
+    
     @IBAction func distanceChanged(_ sender: UISlider) {
         let value = sender.value
     
@@ -47,7 +49,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         debug = !debug
         
         // Show statistics such as fps and timing information
-        sceneView.showsStatistics = true
+        sceneView.showsStatistics = debug
         
         if debug {
             sceneView.debugOptions = SCNDebugOptions(rawValue: ARSCNDebugOptions.showWorldOrigin.rawValue | ARSCNDebugOptions.showFeaturePoints.rawValue)
@@ -64,24 +66,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         reset(self)
     }
-    @IBAction func draw(_ sender: Any) {
-        guard let sphereScene = SCNScene(named: "art.scnassets/dot.scn") else {
-            fatalError("Could not get dot scene")
-        }
-        let dotNode = SCNNode()
-        for child in sphereScene.rootNode.childNodes {
-            child.geometry?.firstMaterial?.lightingModel = .physicallyBased
-            dotNode.addChildNode(child)
-        }
-        
-        let position = getPositionInFrontOfCamera(distance: distance)
-        
-        dotNode.position = position
-        sceneView.scene.rootNode.addChildNode(dotNode)
-        
-        drawNodes.append(dotNode)
-    }
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -132,6 +116,20 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // Release any cached data, images, etc that aren't in use.
     }
     
+    // MARK：Drawing
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        timer = Timer.scheduledTimer(timeInterval: 0.0, target: self, selector: #selector(draw), userInfo: nil, repeats: true)
+    }
+ 
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        timer.invalidate()
+    }
+    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+        timer.invalidate()
+    }
+    
+    
+    
     // MARK: - ARSCNViewDelegate
     
 /*
@@ -159,7 +157,22 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     // MARK: Private Methods
-
+    
+    @objc private func draw() {
+        // This is where we get our dots from
+        let sphereScene = SCNScene(named: "art.scnassets/dot.scn")!
+        
+        let dotNode = SCNNode()
+        for child in sphereScene.rootNode.childNodes {
+            child.geometry?.firstMaterial?.lightingModel = .physicallyBased
+            dotNode.addChildNode(child)
+        }
+        
+        let position = self.getPositionInFrontOfCamera(distance: self.distance)
+        dotNode.position = position
+        self.sceneView.scene.rootNode.addChildNode(dotNode)
+        self.drawNodes.append(dotNode)
+    }
     
     private func getCameraNode() -> SCNNode {
         for node in sceneView.scene.rootNode.childNodes {

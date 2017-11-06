@@ -31,7 +31,7 @@
                                                 <rect key="frame" x="0.0" y="0.0" width="375" height="80"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uo8-Ie-mTx">
-                                                        <rect key="frame" x="0.0" y="0.0" width="125" height="80"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="187.5" height="80"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                                         <state key="normal" title="Reset">
                                                             <color key="titleColor" red="0.80784314869999996" green="0.027450980619999999" blue="0.33333334329999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -40,16 +40,8 @@
                                                             <action selector="reset:" destination="qLc-rM-tfK" eventType="touchUpInside" id="K8N-cU-lPY"/>
                                                         </connections>
                                                     </button>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EmQ-hO-0vB">
-                                                        <rect key="frame" x="125" y="0.0" width="125" height="80"/>
-                                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="30"/>
-                                                        <state key="normal" title="Draw"/>
-                                                        <connections>
-                                                            <action selector="draw:" destination="qLc-rM-tfK" eventType="touchDragInside" id="s2h-e7-qTf"/>
-                                                        </connections>
-                                                    </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8f0-sj-xM0">
-                                                        <rect key="frame" x="250" y="0.0" width="125" height="80"/>
+                                                        <rect key="frame" x="187.5" y="0.0" width="187.5" height="80"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                                         <state key="normal" title="Debug">
                                                             <color key="titleColor" red="0.96078431610000004" green="0.70588237050000002" blue="0.20000000300000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
