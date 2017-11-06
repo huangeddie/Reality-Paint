@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Paint/ViewController.swift"
-            timestampString = "531624031.183266"
+            timestampString = "531624797.583076"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "187"
-            endingLineNumber = "187"
+            startingLineNumber = "211"
+            endingLineNumber = "211"
             landmarkName = "renderer(_:didRemove:for:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Paint/ViewController.swift"
-            timestampString = "531624031.183604"
+            timestampString = "531624797.583153"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "191"
-            endingLineNumber = "191"
+            startingLineNumber = "215"
+            endingLineNumber = "215"
             landmarkName = "renderer(_:didAdd:for:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Paint/ViewController.swift"
-            timestampString = "531624031.183819"
+            timestampString = "531624797.583211"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "188"
-            endingLineNumber = "188"
+            startingLineNumber = "212"
+            endingLineNumber = "212"
             landmarkName = "renderer(_:didRemove:for:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -58,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Paint/ViewController.swift"
-            timestampString = "531624031.184027"
+            timestampString = "531624797.583263"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "192"
-            endingLineNumber = "192"
+            startingLineNumber = "216"
+            endingLineNumber = "216"
             landmarkName = "renderer(_:didAdd:for:)"
             landmarkType = "7">
          </BreakpointContent>

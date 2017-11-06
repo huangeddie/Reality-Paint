@@ -13,6 +13,7 @@ import ARKit
 class ViewController: UIViewController, ARSCNViewDelegate {
 
     @IBOutlet var sceneView: ARSCNView!
+    @IBOutlet weak var distanceSlider: UISlider!
     
     /// True means that it's a dot; False means it's a connecting line
     var drawNodes = [SCNNode]()
@@ -20,6 +21,22 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     var debug = false
     
     var breakConnection = false
+    
+    let minimumDistance: Float = 0.1
+    let maximumDistance: Float = 1.0
+    
+    var distance: Float = 1.0
+    var crossHairNode: SCNNode!
+    
+    @IBAction func distanceChanged(_ sender: UISlider) {
+        let value = sender.value
+    
+        distance = minimumDistance + (maximumDistance - minimumDistance) * value
+        
+        crossHairNode.position = SCNVector3(0, 0, -distance)
+    }
+    
+    
     
     @IBAction func reset(_ sender: Any) {
         while let node = drawNodes.popLast() {
@@ -57,7 +74,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             dotNode.addChildNode(child)
         }
         
-        let position = getPositionInFrontOfCamera(distance: 0.5)
+        let position = getPositionInFrontOfCamera(distance: distance)
         
         dotNode.position = position
         sceneView.scene.rootNode.addChildNode(dotNode)
@@ -71,7 +88,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         // Set the view's delegate
         sceneView.delegate = self
-        
         
     }
     
@@ -93,9 +109,15 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             crossHairNode.addChildNode(child)
         }
         
+        self.crossHairNode = crossHairNode
+        
         let cameraNode = getCameraNode()
-        crossHairNode.position = SCNVector3(0.0, 0.0, -0.1)
+        crossHairNode.position = SCNVector3(0.0, 0.0, -distance)
         cameraNode.addChildNode(crossHairNode)
+        
+        // Set the distance marker
+        distance = (minimumDistance + maximumDistance) / 2
+        distanceSlider.value = distance
     }
     
     override func viewWillDisappear(_ animated: Bool) {

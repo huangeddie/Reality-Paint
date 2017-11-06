@@ -5,6 +5,7 @@
     </device>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -21,43 +22,61 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <subviews>
                                     <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VnA-ON-W42">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="567"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="537"/>
                                     </arscnView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="fXa-fN-36e">
-                                        <rect key="frame" x="0.0" y="567" width="375" height="100"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="MHP-74-WUP">
+                                        <rect key="frame" x="0.0" y="537" width="375" height="130"/>
                                         <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uo8-Ie-mTx">
-                                                <rect key="frame" x="0.0" y="0.0" width="125" height="100"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="30"/>
-                                                <state key="normal" title="Reset">
-                                                    <color key="titleColor" red="0.80784314869999996" green="0.027450980619999999" blue="0.33333334329999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                </state>
+                                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="fXa-fN-36e">
+                                                <rect key="frame" x="0.0" y="0.0" width="375" height="80"/>
+                                                <subviews>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uo8-Ie-mTx">
+                                                        <rect key="frame" x="0.0" y="0.0" width="125" height="80"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                                        <state key="normal" title="Reset">
+                                                            <color key="titleColor" red="0.80784314869999996" green="0.027450980619999999" blue="0.33333334329999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        </state>
+                                                        <connections>
+                                                            <action selector="reset:" destination="qLc-rM-tfK" eventType="touchUpInside" id="K8N-cU-lPY"/>
+                                                        </connections>
+                                                    </button>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EmQ-hO-0vB">
+                                                        <rect key="frame" x="125" y="0.0" width="125" height="80"/>
+                                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="30"/>
+                                                        <state key="normal" title="Draw"/>
+                                                        <connections>
+                                                            <action selector="draw:" destination="qLc-rM-tfK" eventType="touchDragInside" id="s2h-e7-qTf"/>
+                                                        </connections>
+                                                    </button>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8f0-sj-xM0">
+                                                        <rect key="frame" x="250" y="0.0" width="125" height="80"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                                        <state key="normal" title="Debug">
+                                                            <color key="titleColor" red="0.96078431610000004" green="0.70588237050000002" blue="0.20000000300000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        </state>
+                                                        <connections>
+                                                            <action selector="reset:" destination="qLc-rM-tfK" eventType="touchUpInside" id="wgT-o0-0ZU"/>
+                                                            <action selector="toggleDebug:" destination="qLc-rM-tfK" eventType="touchUpInside" id="BQA-UY-6uX"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="80" id="eXP-8F-IVU"/>
+                                                </constraints>
+                                            </stackView>
+                                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="RpD-89-PeS">
+                                                <rect key="frame" x="35.5" y="80" width="304" height="51"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="50" id="MI4-Gt-L4X"/>
+                                                </constraints>
                                                 <connections>
-                                                    <action selector="reset:" destination="qLc-rM-tfK" eventType="touchUpInside" id="K8N-cU-lPY"/>
+                                                    <action selector="distanceChanged:" destination="qLc-rM-tfK" eventType="valueChanged" id="uvz-dI-hGy"/>
                                                 </connections>
-                                            </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EmQ-hO-0vB">
-                                                <rect key="frame" x="125" y="0.0" width="125" height="100"/>
-                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="30"/>
-                                                <state key="normal" title="Draw"/>
-                                                <connections>
-                                                    <action selector="draw:" destination="qLc-rM-tfK" eventType="touchDragInside" id="s2h-e7-qTf"/>
-                                                </connections>
-                                            </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8f0-sj-xM0">
-                                                <rect key="frame" x="250" y="0.0" width="125" height="100"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="30"/>
-                                                <state key="normal" title="Debug">
-                                                    <color key="titleColor" red="0.96078431610000004" green="0.70588237050000002" blue="0.20000000300000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                </state>
-                                                <connections>
-                                                    <action selector="reset:" destination="qLc-rM-tfK" eventType="touchUpInside" id="wgT-o0-0ZU"/>
-                                                    <action selector="toggleDebug:" destination="qLc-rM-tfK" eventType="touchUpInside" id="BQA-UY-6uX"/>
-                                                </connections>
-                                            </button>
+                                            </slider>
                                         </subviews>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="100" id="eXP-8F-IVU"/>
+                                            <constraint firstItem="fXa-fN-36e" firstAttribute="width" secondItem="MHP-74-WUP" secondAttribute="width" id="D1v-TH-r0f"/>
+                                            <constraint firstItem="RpD-89-PeS" firstAttribute="width" secondItem="MHP-74-WUP" secondAttribute="width" multiplier="0.8" id="Lar-dj-QTZ"/>
                                         </constraints>
                                     </stackView>
                                 </subviews>
@@ -73,6 +92,7 @@
                         <viewLayoutGuide key="safeArea" id="z5G-I0-By2"/>
                     </view>
                     <connections>
+                        <outlet property="distanceSlider" destination="RpD-89-PeS" id="j62-lD-YBf"/>
                         <outlet property="sceneView" destination="VnA-ON-W42" id="tFn-ne-ij6"/>
                     </connections>
                 </viewController>
