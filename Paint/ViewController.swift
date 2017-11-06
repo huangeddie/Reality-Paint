@@ -28,6 +28,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     var distance: Float = 1.0
     var crossHairNode: SCNNode!
     
+    let crossHairOffsetDistance: Float = 0.03
+    
     var timer = Timer()
     
     @IBAction func distanceChanged(_ sender: UISlider) {
@@ -35,7 +37,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
         distance = minimumDistance + (maximumDistance - minimumDistance) * value
         
-        crossHairNode.position = SCNVector3(0, 0, -distance)
+        crossHairNode.position = SCNVector3(0, 0, -distance + crossHairOffsetDistance)
     }
     
     
@@ -95,13 +97,13 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         self.crossHairNode = crossHairNode
         
-        let cameraNode = getCameraNode()
-        crossHairNode.position = SCNVector3(0.0, 0.0, -distance)
-        cameraNode.addChildNode(crossHairNode)
-        
         // Set the distance marker
         distance = (minimumDistance + maximumDistance) / 2
         distanceSlider.value = distance
+        
+        let cameraNode = getCameraNode()
+        crossHairNode.position = SCNVector3(0.0, 0.0, -distance + crossHairOffsetDistance)
+        cameraNode.addChildNode(crossHairNode)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -118,6 +120,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     // MARK：Drawing
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        timer.invalidate()
         timer = Timer.scheduledTimer(timeInterval: 0.0, target: self, selector: #selector(draw), userInfo: nil, repeats: true)
     }
  
